@@ -1,12 +1,5 @@
-# Hadoop Single-Node Cluster in Docker
+# AWS Data Pipeline — LocalStack Project
 
-This project sets up a single-node Hadoop cluster (HDFS + YARN) in a Docker container, perfect for development and testing.
+A fully AWS-native data pipeline built and tested locally using **LocalStack**, provisioned with **Terraform**, and implemented in **Python**.
 
-
-## Getting Started
-
-### 1. Clone the repository 
-```bash
-git clone https://github.com/EbEmad/hadoop.git
-cd hadoop
-docker-compose up --build 
+---
