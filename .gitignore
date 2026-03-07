@@ -1,0 +1,5 @@
+BUILDING.md
+terraform.tfstate
+.terraform
+.terraform.lock.hcl
+.venv
