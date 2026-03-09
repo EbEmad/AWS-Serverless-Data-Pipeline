@@ -27,7 +27,7 @@ resource "aws_s3_bucket_versioning" "raw" {
   bucket = aws_s3_bucket.raw.id
 
   versioning_configuration {
-    status = "Enabled"
+    status = var.enable_s3_versioning ? "Enabled" : "Suspended"
   }
 }
 
@@ -60,7 +60,7 @@ resource "aws_s3_bucket_versioning" "processed" {
   bucket = aws_s3_bucket.processed.id
 
   versioning_configuration {
-    status = "Enabled"
+    status = var.enable_s3_versioning ? "Enabled" : "Suspended"
   }
 }
 

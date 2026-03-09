@@ -4,15 +4,20 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    # Needed by lambda.tf to auto-zip the Lambda handler files
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.0"
+    }
   }
 }
 
 
 # AWS Provider configured to point to LocalStack
 provider "aws" {
-  region                      = "us-east-1"
-  access_key                  = "test"
-  secret_key                  = "test"
+  region                      = var.aws_region
+  access_key                  = var.aws_access_key
+  secret_key                  = var.aws_secret_key
 
   # Skip real AWS validations —> we're using LocalStack
   skip_credentials_validation = true
@@ -22,30 +27,30 @@ provider "aws" {
 
   # All AWS services point to LocalStack 
   endpoints {
-    s3             = "http://localhost:4566"
-    lambda         = "http://localhost:4566"
-    stepfunctions  = "http://localhost:4566"
-    kinesis        = "http://localhost:4566"
-    firehose       = "http://localhost:4566"
-    es             = "http://localhost:4566"
-    redshift       = "http://localhost:4566"
-    dynamodb       = "http://localhost:4566"
-    cloudwatch     = "http://localhost:4566"
-    sns            = "http://localhost:4566"
-    sqs            = "http://localhost:4566"
-    iam            = "http://localhost:4566"
-    logs           = "http://localhost:4566"
-    events         = "http://localhost:4566"
-    scheduler      = "http://localhost:4566"
-    sts            = "http://localhost:4566"
+    s3             = var.localstack_endpoint
+    lambda         = var.localstack_endpoint
+    stepfunctions  = var.localstack_endpoint
+    kinesis        = var.localstack_endpoint
+    firehose       = var.localstack_endpoint
+    es             = var.localstack_endpoint
+    redshift       = var.localstack_endpoint
+    dynamodb       = var.localstack_endpoint
+    cloudwatch     = var.localstack_endpoint
+    sns            = var.localstack_endpoint
+    sqs            = var.localstack_endpoint
+    iam            = var.localstack_endpoint
+    logs           = var.localstack_endpoint
+    events         = var.localstack_endpoint
+    scheduler      = var.localstack_endpoint
+    sts            = var.localstack_endpoint
   }
 }
 
 
-# Local variables reused across all resources
+# Local variables — computed from input variables, reused across all resources
 locals {
-  project     = "aws-data-pipeline"
-  region      = "us-east-1"
-  account_id  = "000000000000"   # LocalStack default account ID
-  environment = "local"
+  project     = var.project
+  region      = var.aws_region
+  account_id  = var.aws_account_id
+  environment = var.environment
 }

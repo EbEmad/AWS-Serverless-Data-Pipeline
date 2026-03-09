@@ -1,7 +1,7 @@
 # Stores a record for every pipeline execution — file name, status, timestamps, record counts
 resource "aws_dynamodb_table" "pipeline_tracking" {
   name         = "${local.project}-tracking"
-  billing_mode = "PAY_PER_REQUEST" # No need to pre-provision capacity  scales automatically
+  billing_mode = var.dynamodb_billing_mode
 
   # Primary key->every pipeline run gets a unique ID
   hash_key = "run_id"
