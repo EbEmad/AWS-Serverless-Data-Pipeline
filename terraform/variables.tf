@@ -50,7 +50,7 @@ variable "localstack_endpoint" {
 variable "lambda_endpoint_url" {
   description = "Endpoint URL that Lambda containers use to reach LocalStack (host.docker.internal). Set to empty string for real AWS."
   type        = string
-  default     = "http://host.docker.internal:4566"
+  default     = "http://172.17.0.2:4566"
 }
 
 # ---- Lambda -------------------------------------------------
