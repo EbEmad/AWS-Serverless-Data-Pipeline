@@ -26,20 +26,27 @@ resource "aws_iam_role" "firehose_exec" {
   })
 }
 
-#  Kinesis Firehose Delivery Stream (Kinesis Stream → S3 Backup)
-resource "aws_kinesis_firehose_delivery_stream" "s3_archive" {
+#  Kinesis Firehose Delivery Stream (Kinesis Stream → Elasticsearch + S3 Backup)
+resource "aws_kinesis_firehose_delivery_stream" "es_delivery" {
   name        = "${local.project}-firehose"
-  destination = "extended_s3"
+  destination = "elasticsearch"
 
   kinesis_source_configuration {
     kinesis_stream_arn = aws_kinesis_stream.pipeline_stream.arn
     role_arn           = aws_iam_role.firehose_exec.arn
   }
 
-  extended_s3_configuration {
+  elasticsearch_configuration {
+    domain_arn = aws_elasticsearch_domain.pipeline_es.arn
     role_arn   = aws_iam_role.firehose_exec.arn
-    bucket_arn = aws_s3_bucket.processed.arn
-    prefix     = "archive/"
+    index_name = "pipeline-data"
+    
+    s3_backup_mode = "AllDocuments"
+    s3_configuration {
+      role_arn   = aws_iam_role.firehose_exec.arn
+      bucket_arn = aws_s3_bucket.processed.arn
+      prefix     = "archive/"
+    }
   }
 }
 
@@ -60,6 +67,11 @@ resource "aws_iam_role_policy" "firehose_policy" {
         Effect   = "Allow"
         Action   = ["kinesis:DescribeStream", "kinesis:GetShardIterator", "kinesis:GetRecords", "kinesis:ListShards"]
         Resource = aws_kinesis_stream.pipeline_stream.arn
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["es:DescribeElasticsearchDomain", "es:DescribeElasticsearchDomains", "es:DescribeElasticsearchDomainConfig", "es:ESHttpPost", "es:ESHttpPut"]
+        Resource = ["${aws_elasticsearch_domain.pipeline_es.arn}", "${aws_elasticsearch_domain.pipeline_es.arn}/*"]
       }
     ]
   })

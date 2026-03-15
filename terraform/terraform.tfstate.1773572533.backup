@@ -1,7 +1,7 @@
 {
   "version": 4,
   "terraform_version": "1.14.7",
-  "serial": 300,
+  "serial": 293,
   "lineage": "b7c6ff9d-5667-7c7e-5d01-6847eec3f494",
   "outputs": {
     "elasticsearch_domain_name": {
@@ -26,6 +26,10 @@
     },
     "raw_bucket_name": {
       "value": "aws-data-pipeline-raw-data",
+      "type": "string"
+    },
+    "redshift_database_name": {
+      "value": "pipeline_db",
       "type": "string"
     },
     "state_machine_arn": {
@@ -393,7 +397,7 @@
         {
           "schema_version": 0,
           "attributes": {
-            "access_policies": "{\"Statement\":[{\"Action\":\"es:*\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Resource\":\"arn:aws:es:us-east-1:000000000000:domain/aws-data-pipeline-es/*\"}],\"Version\":\"2012-10-17\"}",
+            "access_policies": null,
             "advanced_options": {},
             "advanced_security_options": [
               {
@@ -535,12 +539,7 @@
             "description": "",
             "force_detach_policies": false,
             "id": "aws-data-pipeline-eventbridge-exec-role",
-            "inline_policy": [
-              {
-                "name": "aws-data-pipeline-eventbridge-policy",
-                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":\"states:StartExecution\",\"Effect\":\"Allow\",\"Resource\":\"arn:aws:states:us-east-1:000000000000:stateMachine:aws-data-pipeline-state-machine\"}]}"
-              }
-            ],
+            "inline_policy": [],
             "managed_policy_arns": [],
             "max_session_duration": 3600,
             "name": "aws-data-pipeline-eventbridge-exec-role",
@@ -578,19 +577,14 @@
             "description": "",
             "force_detach_policies": false,
             "id": "aws-data-pipeline-firehose-exec-role",
-            "inline_policy": [
-              {
-                "name": "aws-data-pipeline-firehose-policy",
-                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"s3:AbortMultipartUpload\",\"s3:GetBucketLocation\",\"s3:GetObject\",\"s3:ListBucket\",\"s3:ListBucketMultipartUploads\",\"s3:PutObject\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::aws-data-pipeline-processed-data\",\"arn:aws:s3:::aws-data-pipeline-processed-data/*\"]},{\"Action\":[\"kinesis:DescribeStream\",\"kinesis:GetShardIterator\",\"kinesis:GetRecords\",\"kinesis:ListShards\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:kinesis:us-east-1:000000000000:stream/aws-data-pipeline-stream\"}]}"
-              }
-            ],
+            "inline_policy": [],
             "managed_policy_arns": [],
             "max_session_duration": 3600,
             "name": "aws-data-pipeline-firehose-exec-role",
             "name_prefix": "",
             "path": "/",
             "permissions_boundary": "",
-            "tags": {},
+            "tags": null,
             "tags_all": {},
             "unique_id": "AROAQAAAAAAAA3OI7SROJ"
           },
@@ -615,12 +609,7 @@
             "description": "",
             "force_detach_policies": false,
             "id": "aws-data-pipeline-lambda-exec-role",
-            "inline_policy": [
-              {
-                "name": "aws-data-pipeline-lambda-policy",
-                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:logs:*:*:*\"},{\"Action\":[\"s3:GetObject\",\"s3:HeadObject\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:s3:::aws-data-pipeline-raw-data/*\"},{\"Action\":[\"s3:PutObject\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:s3:::aws-data-pipeline-processed-data/*\"},{\"Action\":[\"dynamodb:PutItem\",\"dynamodb:UpdateItem\",\"dynamodb:GetItem\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:dynamodb:us-east-1:000000000000:table/aws-data-pipeline-tracking\"},{\"Action\":[\"kinesis:PutRecord\",\"kinesis:PutRecords\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:kinesis:us-east-1:000000000000:stream/aws-data-pipeline-stream\"}]}"
-              }
-            ],
+            "inline_policy": [],
             "managed_policy_arns": [],
             "max_session_duration": 3600,
             "name": "aws-data-pipeline-lambda-exec-role",
@@ -658,12 +647,7 @@
             "description": "",
             "force_detach_policies": false,
             "id": "aws-data-pipeline-sfn-exec-role",
-            "inline_policy": [
-              {
-                "name": "aws-data-pipeline-sfn-policy",
-                "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":\"lambda:InvokeFunction\",\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:lambda:us-east-1:000000000000:function:aws-data-pipeline-validator\",\"arn:aws:lambda:us-east-1:000000000000:function:aws-data-pipeline-transformer\"]}]}"
-              }
-            ],
+            "inline_policy": [],
             "managed_policy_arns": [],
             "max_session_duration": 3600,
             "name": "aws-data-pipeline-sfn-exec-role",
@@ -730,14 +714,13 @@
             "id": "aws-data-pipeline-firehose-exec-role:aws-data-pipeline-firehose-policy",
             "name": "aws-data-pipeline-firehose-policy",
             "name_prefix": "",
-            "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"s3:AbortMultipartUpload\",\"s3:GetBucketLocation\",\"s3:GetObject\",\"s3:ListBucket\",\"s3:ListBucketMultipartUploads\",\"s3:PutObject\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::aws-data-pipeline-processed-data\",\"arn:aws:s3:::aws-data-pipeline-processed-data/*\"]},{\"Action\":[\"kinesis:DescribeStream\",\"kinesis:GetShardIterator\",\"kinesis:GetRecords\",\"kinesis:ListShards\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:kinesis:us-east-1:000000000000:stream/aws-data-pipeline-stream\"},{\"Action\":[\"es:DescribeElasticsearchDomain\",\"es:DescribeElasticsearchDomains\",\"es:DescribeElasticsearchDomainConfig\",\"es:ESHttpPost\",\"es:ESHttpPut\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:es:us-east-1:000000000000:domain/aws-data-pipeline-es\",\"arn:aws:es:us-east-1:000000000000:domain/aws-data-pipeline-es/*\"]}]}",
+            "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"s3:AbortMultipartUpload\",\"s3:GetBucketLocation\",\"s3:GetObject\",\"s3:ListBucket\",\"s3:ListBucketMultipartUploads\",\"s3:PutObject\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::aws-data-pipeline-processed-data\",\"arn:aws:s3:::aws-data-pipeline-processed-data/*\"]},{\"Action\":[\"kinesis:DescribeStream\",\"kinesis:GetShardIterator\",\"kinesis:GetRecords\",\"kinesis:ListShards\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:kinesis:us-east-1:000000000000:stream/aws-data-pipeline-stream\"}]}",
             "role": "aws-data-pipeline-firehose-exec-role"
           },
           "sensitive_attributes": [],
           "identity_schema_version": 0,
           "private": "bnVsbA==",
           "dependencies": [
-            "aws_elasticsearch_domain.pipeline_es",
             "aws_iam_role.firehose_exec",
             "aws_kinesis_stream.pipeline_stream",
             "aws_s3_bucket.processed"
@@ -803,51 +786,41 @@
     {
       "mode": "managed",
       "type": "aws_kinesis_firehose_delivery_stream",
-      "name": "es_delivery",
+      "name": "s3_archive",
       "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
       "instances": [
         {
           "schema_version": 1,
           "attributes": {
             "arn": "arn:aws:firehose:us-east-1:000000000000:deliverystream/aws-data-pipeline-firehose",
-            "destination": "elasticsearch",
-            "destination_id": "5e73c2ab",
-            "elasticsearch_configuration": [
+            "destination": "extended_s3",
+            "destination_id": "d451cdfd",
+            "elasticsearch_configuration": [],
+            "extended_s3_configuration": [
               {
+                "bucket_arn": "arn:aws:s3:::aws-data-pipeline-processed-data",
                 "buffering_interval": 300,
                 "buffering_size": 5,
                 "cloudwatch_logging_options": [],
-                "cluster_endpoint": "",
-                "domain_arn": "arn:aws:es:us-east-1:000000000000:domain/aws-data-pipeline-es",
-                "index_name": "pipeline-data",
-                "index_rotation_period": "OneDay",
+                "compression_format": "UNCOMPRESSED",
+                "custom_time_zone": "UTC",
+                "data_format_conversion_configuration": [],
+                "dynamic_partitioning_configuration": [],
+                "error_output_prefix": "",
+                "file_extension": "",
+                "kms_key_arn": "",
+                "prefix": "archive/",
                 "processing_configuration": [
                   {
                     "enabled": false,
                     "processors": []
                   }
                 ],
-                "retry_duration": 300,
                 "role_arn": "arn:aws:iam::000000000000:role/aws-data-pipeline-firehose-exec-role",
-                "s3_backup_mode": "AllDocuments",
-                "s3_configuration": [
-                  {
-                    "bucket_arn": "arn:aws:s3:::aws-data-pipeline-processed-data",
-                    "buffering_interval": 300,
-                    "buffering_size": 5,
-                    "cloudwatch_logging_options": [],
-                    "compression_format": "UNCOMPRESSED",
-                    "error_output_prefix": "",
-                    "kms_key_arn": "",
-                    "prefix": "archive/",
-                    "role_arn": "arn:aws:iam::000000000000:role/aws-data-pipeline-firehose-exec-role"
-                  }
-                ],
-                "type_name": "",
-                "vpc_config": []
+                "s3_backup_configuration": [],
+                "s3_backup_mode": "Disabled"
               }
             ],
-            "extended_s3_configuration": [],
             "http_endpoint_configuration": [],
             "iceberg_configuration": [],
             "id": "arn:aws:firehose:us-east-1:000000000000:deliverystream/aws-data-pipeline-firehose",
@@ -880,7 +853,6 @@
           "identity_schema_version": 0,
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInVwZGF0ZSI6NjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
           "dependencies": [
-            "aws_elasticsearch_domain.pipeline_es",
             "aws_iam_role.firehose_exec",
             "aws_kinesis_stream.pipeline_stream",
             "aws_s3_bucket.processed"
@@ -905,20 +877,14 @@
             "name": "aws-data-pipeline-stream",
             "retention_period": 24,
             "shard_count": 1,
-            "shard_level_metrics": [],
+            "shard_level_metrics": null,
             "stream_mode_details": [
               {
                 "stream_mode": "PROVISIONED"
               }
             ],
-            "tags": {
-              "Environment": "local",
-              "Name": "aws-data-pipeline-stream"
-            },
-            "tags_all": {
-              "Environment": "local",
-              "Name": "aws-data-pipeline-stream"
-            },
+            "tags": {},
+            "tags_all": {},
             "timeouts": null
           },
           "sensitive_attributes": [],
@@ -969,7 +935,7 @@
             "invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:000000000000:function:aws-data-pipeline-transformer/invocations",
             "kms_key_arn": "",
             "last_modified": "2026-03-15T10:50:12.464353+0000",
-            "layers": [],
+            "layers": null,
             "logging_config": [
               {
                 "application_log_level": "",
@@ -1068,7 +1034,7 @@
             "invoke_arn": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:000000000000:function:aws-data-pipeline-validator/invocations",
             "kms_key_arn": "",
             "last_modified": "2026-03-15T10:47:44.239222+0000",
-            "layers": [],
+            "layers": null,
             "logging_config": [
               {
                 "application_log_level": "",
@@ -1124,6 +1090,97 @@
             "aws_iam_role.lambda_exec",
             "data.archive_file.validator_zip"
           ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_redshift_cluster",
+      "name": "pipeline_redshift",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "status": "tainted",
+          "schema_version": 0,
+          "attributes": {
+            "allow_version_upgrade": true,
+            "apply_immediately": false,
+            "aqua_configuration_status": null,
+            "arn": null,
+            "automated_snapshot_retention_period": 1,
+            "availability_zone": null,
+            "availability_zone_relocation_enabled": false,
+            "cluster_identifier": "aws-data-pipeline-redshift",
+            "cluster_namespace_arn": null,
+            "cluster_nodes": null,
+            "cluster_parameter_group_name": null,
+            "cluster_public_key": null,
+            "cluster_revision_number": null,
+            "cluster_subnet_group_name": null,
+            "cluster_type": "single-node",
+            "cluster_version": "1.0",
+            "database_name": "pipeline_db",
+            "default_iam_role_arn": null,
+            "dns_name": null,
+            "elastic_ip": null,
+            "encrypted": false,
+            "endpoint": null,
+            "enhanced_vpc_routing": null,
+            "final_snapshot_identifier": null,
+            "iam_roles": [],
+            "id": "aws-data-pipeline-redshift",
+            "kms_key_id": null,
+            "logging": null,
+            "maintenance_track_name": "current",
+            "manage_master_password": null,
+            "manual_snapshot_retention_period": -1,
+            "master_password": "Admin1234!",
+            "master_password_secret_arn": null,
+            "master_password_secret_kms_key_id": null,
+            "master_password_wo": null,
+            "master_password_wo_version": null,
+            "master_username": "admin",
+            "multi_az": false,
+            "node_type": "dc2.large",
+            "number_of_nodes": 1,
+            "owner_account": null,
+            "port": 5439,
+            "preferred_maintenance_window": null,
+            "publicly_accessible": true,
+            "skip_final_snapshot": true,
+            "snapshot_arn": null,
+            "snapshot_cluster_identifier": null,
+            "snapshot_copy": null,
+            "snapshot_identifier": null,
+            "tags": {
+              "Environment": "local",
+              "Name": "aws-data-pipeline-redshift",
+              "Purpose": "Data warehouse for SQL analytics on processed pipeline data"
+            },
+            "tags_all": {
+              "Environment": "local",
+              "Name": "aws-data-pipeline-redshift",
+              "Purpose": "Data warehouse for SQL analytics on processed pipeline data"
+            },
+            "timeouts": null,
+            "vpc_security_group_ids": []
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "master_password"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "master_password_wo"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo0NTAwMDAwMDAwMDAwLCJkZWxldGUiOjI0MDAwMDAwMDAwMDAsInVwZGF0ZSI6NDUwMDAwMDAwMDAwMH19"
         }
       ]
     },
@@ -1193,7 +1250,7 @@
             "timeouts": null,
             "versioning": [
               {
-                "enabled": true,
+                "enabled": false,
                 "mfa_delete": false
               }
             ],
@@ -1273,7 +1330,7 @@
             "timeouts": null,
             "versioning": [
               {
-                "enabled": true,
+                "enabled": false,
                 "mfa_delete": false
               }
             ],
