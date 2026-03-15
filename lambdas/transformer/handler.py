@@ -34,13 +34,13 @@ logger.setLevel(logging.INFO)
 # Configuration
 TRACKING_TABLE   = os.environ.get("TRACKING_TABLE",       "aws-data-pipeline-tracking")
 PROCESSED_BUCKET = os.environ.get("PROCESSED_BUCKET",     "aws-data-pipeline-processed-data")
-#KINESIS_STREAM   = os.environ.get("KINESIS_STREAM",        "aws-data-pipeline-stream")
+KINESIS_STREAM   = os.environ.get("KINESIS_STREAM",        "aws-data-pipeline-stream")
 REGION           = os.environ.get("AWS_DEFAULT_REGION",    "us-east-1")
 ENDPOINT_URL     = os.environ.get("AWS_ENDPOINT_URL",      "http://localhost:4566")
 
 # boto3 clients
 s3       = boto3.client("s3",       region_name=REGION, endpoint_url=ENDPOINT_URL)
-#kinesis  = boto3.client("kinesis",  region_name=REGION, endpoint_url=ENDPOINT_URL)
+kinesis  = boto3.client("kinesis",  region_name=REGION, endpoint_url=ENDPOINT_URL)
 dynamodb = boto3.resource("dynamodb", region_name=REGION, endpoint_url=ENDPOINT_URL)
 table    = dynamodb.Table(TRACKING_TABLE)
 
@@ -200,7 +200,7 @@ def lambda_handler(event: dict, context) -> dict:
         _write_csv_to_s3(PROCESSED_BUCKET, key, clean_rows)
 
         #  Publish to Kinesis stream
-        # _publish_to_kinesis(clean_rows, run_id)
+        _publish_to_kinesis(clean_rows, run_id)
 
         #  Update DynamoDB tracking record
         _update_tracking_record(run_id, output_record_count=len(clean_rows))
